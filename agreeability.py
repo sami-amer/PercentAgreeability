@@ -81,20 +81,7 @@ def import_multiple(files):
         e.append(e1)
     return b,a,e
 
-def get_agreeability_multiple(files1,files2):
-    bTime, aTime, eTime = (get_end_time(files1[0]))
-    b1,a1,e1 = import_multiple(files1)
-    b2,a2,e2 = import_multiple(files2)
-    for elem1,elem2 in zip(b1,b2):
-        if elem1 == elem2:
-            bA += 1
-    for elem1,elem2 in zip(a1,a2):
-        if elem1 == elem2:
-            aA += 1
-    for elem1,elem2 in zip(e1,e2):
-        if elem1 == elem2:
-            eA += 1
-    return bA/(bTime*1000), aA/(aTime*1000), eA/(eTime*1000) 
+
     
 if __name__ == "__main__":
     print(get_agreeability('resources/P01_S02_wellness_Emily.txt','resources/p01_s02.txt'))
