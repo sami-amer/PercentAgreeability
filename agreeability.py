@@ -54,8 +54,12 @@ def import_data(file_name):
 
 def get_agreeability(file1,file2):
     bTime, aTime, eTime = (get_end_time(file1))
-    b1,a1,e1 = import_data(file1)
-    b2,a2,e2 = import_data(file2)
+    if isinstance(file1,list): #there is no use case where a single file will be compared to a list; the lengths wouldnt match
+        b1,a1,e1 = import_multiple(file1)
+        b2,a2,e2 = import_multiple(file2)
+    else:
+        b1,a1,e1 = import_data(file1)
+        b2,a2,e2 = import_data(file2)
     bA, aA, eA = 0,0,0
     for elem1,elem2 in zip(b1,b2):
         if elem1 == elem2:
@@ -94,5 +98,5 @@ def get_agreeability_multiple(files1,files2):
     
 if __name__ == "__main__":
     print(get_agreeability('resources/P01_S02_wellness_Emily.txt','resources/p01_s02.txt'))
-    print(get_agreeability('resources_test/tester1.txt','resources_test/tester2.txt'))
-    print(get_agreeability('resources_test/tester3.txt','resources_test/tester4.txt'))
+    # print(get_agreeability('resources_test/tester1.txt','resources_test/tester2.txt'))
+    # print(get_agreeability('resources_test/tester3.txt','resources_test/tester4.txt'))
