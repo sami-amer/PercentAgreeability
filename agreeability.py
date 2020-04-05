@@ -1,3 +1,4 @@
+import sys
 def create_template_list(duration):
     return [0] * int(duration * 1000)
 
@@ -84,6 +85,7 @@ def import_multiple(files):
 
     
 if __name__ == "__main__":
-    print(get_agreeability('resources/P01_S02_wellness_Emily.txt','resources/p01_s02.txt'))
+    # print(get_agreeability('resources/P01_S02_wellness_Emily.txt','resources/p01_s02.txt'))
     # print(get_agreeability('resources_test/tester1.txt','resources_test/tester2.txt'))
     # print(get_agreeability('resources_test/tester3.txt','resources_test/tester4.txt'))
+    print(get_agreeability(str(sys.argv[1]), str(sys.argv[2])))
