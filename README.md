@@ -28,3 +28,14 @@ Since the end goals is comparing two annotators, not two files, this functions t
 ~~the same as `get_agreeability`, except uses `import_multiple` instead of `import_data`~~
 
 ##### NOTE: `get_agreeabilty_multiple` was deemed to be redundant. Instead, `get_agreeablity` was updated to work with both single files and lists of files.
+
+### Tester Files
+
+`resources_test` contains hand crafted files to test the program.\
+The tested variable is the attention catagory, the other two catagories should return 1.0
+
+`tester1.txt` and `tester2.txt` should provide a very low agreeability when run against each other.
+
+`tester3.txt` and `tester4.txt` should provide a very high agreeability when run against each other.
+
+`tester5.txt` and `tester6.txt` should provide a half agreeability when run against each other.

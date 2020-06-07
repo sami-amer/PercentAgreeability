@@ -24,6 +24,14 @@ def get_end_time(file_input):
                 eTime = line[2]
     return bTime, aTime, eTime
 
+def get_end_time_multiple(file_list):
+    b,a,e = 0.0,0.0,0.0
+    for f in file_list:
+        b += get_end_time(f)[0]
+        a += get_end_time(f)[1]
+        e += get_end_time(f)[2]
+    return b,a,e
+
 def import_data(file_name):
     bTime, aTime, eTime = get_end_time(file_name)
     Behavioral_Engagement = create_template_list(bTime)
@@ -34,12 +42,16 @@ def import_data(file_name):
             line = line.split("\t")
             del line[1]
             line[-1] = line[-1].strip("\n")
+            if line[1] == 'default':
+                continue
             if line[4] == "off-tsak" or line[4] == "distarcted" or line[4] == "Bored":
                 tag = 1
             if line[4] == "on-task" or line[4] == "idle" or line[4] == "Confused":
                 tag = 2
             if line[4] == "Satisfied" or line[4] == "focused":
                 tag = 3
+            if line[4] == 'None':
+                continue
             start = int(float(line[1]) * 1000) - 1
             stop = int(float(line[2]) * 1000)
             if line[0] == "Behavioral_Engagement":
@@ -54,13 +66,15 @@ def import_data(file_name):
     return Behavioral_Engagement, Attention_Engagement, Emotional_Engagement
 
 def get_agreeability(file1,file2):
-    bTime, aTime, eTime = (get_end_time(file1))
+    # bTime, aTime, eTime = (get_end_time(file1))
     if isinstance(file1,list): #there is no use case where a single file will be compared to a list; the lengths wouldnt match
+        bTime, aTime, eTime = get_end_time_multiple(file1)
         b1,a1,e1 = import_multiple(file1)
         b2,a2,e2 = import_multiple(file2)
     else:
         b1,a1,e1 = import_data(file1)
         b2,a2,e2 = import_data(file2)
+        bTime, aTime, eTime = (get_end_time(file1))
     bA, aA, eA = 0,0,0
     for elem1,elem2 in zip(b1,b2):
         if elem1 == elem2:
@@ -77,15 +91,22 @@ def import_multiple(files):
     b,a,e = [],[],[]
     for f in files:
         b1,a1,e1 = import_data(f)
-        b.append(b1)
-        a.append(a1)
-        e.append(e1)
+        b.extend(b1)
+        a.extend(a1)
+        e.extend(e1)
     return b,a,e
 
-
-    
+print(get_agreeability(str(sys.argv[1]), str(sys.argv[2])))  
 if __name__ == "__main__":
     # print(get_agreeability('resources/P01_S02_wellness_Emily.txt','resources/p01_s02.txt'))
     # print(get_agreeability('resources_test/tester1.txt','resources_test/tester2.txt'))
     # print(get_agreeability('resources_test/tester3.txt','resources_test/tester4.txt'))
-    print(get_agreeability(str(sys.argv[1]), str(sys.argv[2])))
+    # print(get_agreeability(str(sys.argv[1]), str(sys.argv[2])))
+    Emily = ['C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP01_S02_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP01_S03_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP01_S04_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP01_S05_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP01_S06_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP01_S07_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP02_S02_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP02_S03_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP02_S04_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP02_S05_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP02_S06_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP02_S07_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP03_S02_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP03_S03_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP03_S05_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP03_S07_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP04_S02_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP04_S03_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP04_S04_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP04_S05_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP04_S06_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP04_S07_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP05_S02_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP05_S03_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP05_S04_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP05_S05_Emily.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedEmily\\ExtractedP05_S07_Emily.txt']
+    Irene = ['C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP01_S02_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP01_S03_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP01_S04_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP01_S05_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP01_S06_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP01_S07_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP02_S02_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP02_S03_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP02_S04_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP02_S05_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP02_S06_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP02_S07_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP03_S02_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP03_S03_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP03_S05_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP03_S07_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP04_S02_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP04_S03_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP04_S04_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP04_S05_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP04_S06_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP04_S07_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP05_S02_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP05_S03_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP05_S04_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP05_S05_Irene.txt', 'C:\\Users\\Blender\\iCloudDrive\\Documents\\School_Files\\Spring_2020\\UROP\\Resources\\Agreeability\\Extracted\\ExtractedIrene\\ExtractedP05_S07_Irene.txt']
+    # # counter = 1
+    # # for I,E in zip(Emily,Irene):
+    # #     print(str(counter) + str(get_agreeability(I,E)))
+    # #     counter +=1
+    print(get_agreeability(Emily,Irene))
+    
